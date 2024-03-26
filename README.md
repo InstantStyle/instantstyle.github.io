@@ -1,1 +1,3 @@
-# instantstyle.github.io
+# InstantStyle
+
+This is the project page for "InstantStyle".

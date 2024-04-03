@@ -49,7 +49,12 @@
       max-width: 1280px;
       margin: 0 auto;
     }
+    .small-image {
+      width: 50%;
+      height: auto;
+    }
   </style>
+
 
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
@@ -89,7 +94,7 @@
   </nav>
 
 
-  <section class="hero">
+   <section class="hero">
     <div class="hero-body">
       <div class="container">
         
@@ -98,9 +103,121 @@
           <h1 class="title is-1 publication-title">
             <font color="#FF0000">I</font><font color="#F0000F">n</font><font color="#E1001E">s</font><font color="#D2002D">t</font><font color="#C3003C">a</font><font color="#B4004B">n</font><font color="#A5005A">t</font><font color="#960069">S</font><font color="#870078">t</font><font color="#780087">y</font><font color="#690096">l</font><font color="#5A00A5">e</font>
           </h1>
-
+          
+          <div class="is-size-5 publication-authors">
+            <div class="author-block">
+              <a href="https://haofanwang.github.io/">Haofan Wang</a><sup>*</sup>,
+            </div>
+            <div class="author-block">
+              <a href="https://github.com/wangqixun">Qixun Wang</a>,
+            </div>
+            <div class="author-block">
+              <a href="https://huggingface.co/baymin0220">Xu Bai</a>,
+            </div>
+            <div class="author-block">
+              <a href="https://github.com/ZekuiQin">Zekui Qin</a>,
+            </div>
+            <div class="author-block">
+              <a href="https://antonioo-c.github.io/">Anthony Chen</a>
+            </div><br>
+          </div>
+          
           <div class="is-size-5 publication-authors">
             <span class="author-block">InstantX Team </span>
+            <br>
+            <span class="author-block"><sup>*</sup>Corresponding Author</span> 
+            <br>
+            <span class="author-block">haofanwang.ai@gmail.com</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2401.07519" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>Arxiv</span>
+                </a>
+              </span>
+
+              <span class="link-block">
+                <a href="https://github.com/InstantStyle/InstantStyle"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                </a>
+              </span>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <div class="container is-max-desktop">
+
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+
+          <div style="display: flex; justify-content: center; margin-bottom: 30px;">
+            <img src="./static/images/style.png" alt="Teaser Image" width="80%" height="80%">
+          </div>
+        
+          <div class="content has-text-justified">
+            <p>
+              Tuning-free diffusion-based models have demonstrated sig- nificant potential in the realm of image personalization and customiza- tion. However, despite this notable progress, current models continue to grapple with several complex challenges in producing style-consistent image generation. Firstly, the concept of ’style’ is inherently underde- termined, encompassing a multitude of elements such as color, material, atmosphere, design, and structure, among others. Secondly, inversion- based methods are prone to style degradation, often resulting in the loss of fine-grained details. Lastly, adapter-based approaches frequently re- quire meticulous weight tuning for each reference image to achieve a bal- ance between style intensity and text controllability. In this paper, we commence by examining several compelling yet frequently overlooked observations. We then proceed to introduce InstantStyle, a framework designed to address these issues through the implementation of two key strategies: 1) A straightforward mechanism that decouples style and con- tent from reference images within the feature space, predicated on the assumption that features within the same space can be either added to or subtracted from one another. 2) The injection of reference image features exclusively into style-specific blocks, thereby preventing style leaks and eschewing the need for cumbersome weight tuning, which often charac- terizes more parameter-heavy designs.Our work demonstrates superior visual stylization outcomes, striking an optimal balance between the in- tensity of style and the controllability of textual elements.
+            </p>
+          </div>
+        </div>
+      </div>
+  </section>
+
+  <section class="method">
+    <div class="container is-max-desktop">
+
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Method</h2>
+
+          <div class="content has-text-justified">
+            <p>
+              Separating Content from Image. Instead of employing complex strategies to disentangle content and style from images, we take the simplest approach to achieving similar capabilities. Compared with the underdetermined attributes of style, content can usually be represented by natural text, thus we can use CLIP’s text encoder to extract the characteristics of the content text as content epresentation. At the same time, we use CLIP’s image encoder to extract the features of the reference image as we did in previous work. Benefit from the good characterization of CLIP global features, after subtracting the content text fea- tures from the image features, the style and content can be explicitly decoupled. Although simple, this strategy is quite effective in mitigating content leakage.
+            </p>
+          </div>
+
+          <div style="display: flex; justify-content: center;">
+            <img src="./static/images/subtraction.png" alt="Teaser Image" width="80%" height="80%">
+          </div>
+
+          <div class="content has-text-justified">
+            <p>
+              Injecting into Style Blocks Only. Empirically, each layer of a deep network captures different semantic information the key observation in our work is that there exists two specific attention layers handling style. Specifically, we find up blocks.0.attentions.1 and down blocks.2.attentions.1 capture style (color, material, atmosphere) and spatial layout (structure, composition) respectively. We can use them to implicitly extract style information, further preventing content leakage without losing the strength of the style. The idea is straightforward, as we have located style blocks, we can inject our image features into these blocks only to achieve style transfer seamlessly. Furthermore, since the number of parameters of the adapter is greatly reduced, the text control ability is also enhanced. This mechanism is applicable to other attention-based feature injection for editing or other tasks.
+            </p>
+          </div>
+
+          <div style="display: flex; justify-content: center;">
+            <img src="./static/images/tree.png" alt="Teaser Image" width="80%" height="80%">
+          </div>
+
+          <div class="content has-text-justified">
+            <p>
+              Overview of IP-Adapter with InstantStyle. There are 11 transformer blocks with SDXL, 4 for downsample blocks, 1 for middle block, 6 for upsample blocks. We find that the 4th and the 6th blocks are corresponding to layout and style respec- tively. Most time, the 6th blocks is enough to capture style, the 4th matters only when the layout is a part of style in some cases. In addition, you can also optionally use the characteristics of CLIP to explicitly subtract content from the feature space.
+            </p>
+          </div>
+
+          <div style="display: flex; justify-content: center;">
+            <img src="./static/images/pipe.png" alt="Teaser Image" width="80%" height="80%">
           </div>
 
         </div>
@@ -108,13 +225,12 @@
     </div>
   </section>
 
+  
 
-
-  <!-- Video grid Extension -->
   <section class="section hero is-small">
     <div class="hero-body">
       <div class="container is-max-desktop">
-        <h2 class="title is-4 has-text-centered"><b style="color:#008AD7; font-weight:normal">&#x25B6 </b>Text-to-Image Generation with Style Reference</h2>
+        <h2 class="title is-4 has-text-centered"><b style="color:#008AD7; font-weight:normal">&#x25B6 </b>Text-to-Image Generation with Style Reference using Subtraction</h2>
         <div id="results-carousel-more" class="carousel results-carousel">
   
           <div class="item item-puppet">
@@ -154,10 +270,54 @@
   
         </div>
       </div>
+
+      <h2 class="title is-4 has-text-centered"><b style="color:#008AD7; font-weight:normal">&#x25B6 </b>Text-to-Image Generation with Style Reference using Style Block</h2>
+      <div id="results-carousel-more" class="carousel results-carousel">
+
+        <div class="item item-puppet">
+          <div class="carousel-content">
+            <img src="static/images/example1.png"
+                   alt="Puppet."/>
+          </div>
+        </div>
+
+        <div class="item item-puppet">
+          <div class="carousel-content">
+            <img src="static/images/example2.png"
+                   alt="Puppet."/>
+          </div>
+        </div>
+      </div>
+
     </div>
+
   </section>
 
-
+  <!-- Video grid Extension
+  <section class="section hero is-small">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <h2 class="title is-4 has-text-centered"><b style="color:#008AD7; font-weight:normal">&#x25B6 </b>Text-to-Image Generation with Style Reference using Style Block</h2>
+        <div id="results-carousel-more" class="carousel results-carousel">
+  
+          <div class="item item-puppet">
+            <div class="carousel-content">
+              <img src="static/images/example1.png"
+                     alt="Puppet."/>
+            </div>
+          </div>
+  
+          <div class="item item-puppet">
+            <div class="carousel-content">
+              <img src="static/images/example2.png"
+                     alt="Puppet."/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section> -->
+  
   <footer class="footer">
     <div class="container">
       <div class="content has-text-centered">
